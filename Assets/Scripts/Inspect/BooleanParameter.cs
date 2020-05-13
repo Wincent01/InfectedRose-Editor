@@ -1,5 +1,4 @@
 using System.Reflection;
-using Behaviors;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,7 +29,7 @@ namespace Inspect
             });
         }
         
-        public override void SetupParameter(PropertyInfo info, BehaviorBase instance)
+        public override void SetupParameter(PropertyInfo info, object instance)
         {
             base.SetupParameter(info, instance);
             

@@ -72,7 +72,7 @@ namespace Tree
             
             if (delta == Vector2.zero) return;
             
-            _workspace.Translate(-delta * (_speed * Time.deltaTime));
+            _workspace.Translate(-delta * (Speed * Time.deltaTime));
         }
     }
 }

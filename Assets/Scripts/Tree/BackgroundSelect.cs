@@ -20,7 +20,7 @@ namespace Tree
 
             OldPosition = Input.mousePosition;
 
-            TreeManager.Workspace.Translate(delta * (250 * Time.deltaTime));
+            TreeManager.Workspace.Translate(delta);
         }
 
         protected override void Down(PointerEventData eventData)

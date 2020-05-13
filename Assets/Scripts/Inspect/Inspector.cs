@@ -61,13 +61,13 @@ namespace Inspect
 
             _description.text = selectable.Description;
 
-            if (selectable is Node node)
+            if (selectable is IInspect inspect)
             {
-                SetupParameters(node.Behavior);
+                SetupParameters(inspect.Parameters);
             }
         }
 
-        private void SetupParameters(BehaviorBase behavior)
+        private void SetupParameters(object behavior)
         {
             var offset = 0;
             

@@ -1,9 +1,16 @@
+using System;
+using Behaviors;
+using Inspect;
+using Tree.Concepts;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Tree
 {
-    public class ConnectionLine : Selectable
+    public class ConnectionLine : Selectable, IInspect
     {
+        [SerializeField] private Image _image;
+        
         public Connection ConnectionA { get; set; }
 
         public Connection ConnectionB { get; set; }
@@ -11,11 +18,17 @@ namespace Tree
         public float Width { get; set; }
 
         public RectTransform Rect { get; private set; }
+        
+        public LineParameters Extra { get; private set; }
 
         public static ConnectionLine Current { get; set; }
 
+        public object Parameters => Extra;
+
         private void Awake()
         {
+            Extra = new LineParameters();
+            
             Rect = GetComponent<RectTransform>();
         }
 
@@ -31,6 +44,19 @@ namespace Tree
             {
                 b = Input.mousePosition;
             }
+
+            var color = Color.green;
+
+            if (Math.Abs(Extra.Delay) > 0.01f || Extra.Intervals != 0)
+            {
+                color = new Color(1f, 0.47f, 0.15f);
+            }
+            else if (Math.Abs(Extra.Duration) > 0.01f)
+            {
+                color = Color.blue;
+            }
+
+            _image.color = color;
 
             Map(ConnectionA.transform.position, b);
 
@@ -86,7 +112,7 @@ namespace Tree
 
         public Connection GetOther(Node connection)
         {
-            return GetOther(connection.Entry);
+            return ConnectionA.Node == connection ? ConnectionB : ConnectionA;
         }
 
         public Connection GetOther(Connection connection)

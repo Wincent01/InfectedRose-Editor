@@ -8,9 +8,9 @@ namespace Inspect
     {
         public PropertyInfo Info { get; set; }
         
-        public BehaviorBase Instance { get; set; }
+        public object Instance { get; set; }
 
-        public virtual void SetupParameter(PropertyInfo info, BehaviorBase instance)
+        public virtual void SetupParameter(PropertyInfo info, object instance)
         {
             Info = info;
             Instance = instance;

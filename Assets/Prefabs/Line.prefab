@@ -88,7 +88,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0124e906c59a4dce9ba5e9601c998762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _name: Sample Connection
+  _selectableName: Connection
   _description: A connection connects two nodes, enabling one to flow into the other
-    when conditions are achived.
+    when conditions are achived. These can have delays and start loops.
   _inspect: 1
+  _image: {fileID: 4058862983773343776}

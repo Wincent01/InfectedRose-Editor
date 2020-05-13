@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Behaviors;
+using Inspect;
 using UnityEngine;
 using UnityEngine.UI;
 using Utilities;
 
 namespace Tree
 {
-    public class Node : Selectable
+    public class Node : Selectable, IInspect
     {
         [SerializeField] private GameObject _connectionPrefab;
 
@@ -25,6 +27,8 @@ namespace Tree
         public NodeConnection[] Connections { get; private set; }
         
         public BehaviorBase Behavior { get; set; }
+
+        public object Parameters => Behavior;
 
         public void StartConnections()
         {
@@ -167,11 +171,40 @@ namespace Tree
                 
                 var others = connection.Connection.Others;
 
-                var behaviors = others.Select(o => o.Behavior).ToArray();
-                
-                if (behaviors.Length == default) continue;
+                var behaviors = new List<BehaviorBase>();
 
-                if (behaviors.Length > 1)
+                foreach (var line in connection.Connection.Lines)
+                {
+                    var current = line.GetOther(this).Node.Behavior;
+
+                    var extra = line.Extra;
+
+                    if (Math.Abs(extra.Duration) > 0.01f)
+                    {
+                        current = new DurationBehavior
+                        {
+                            Action = current,
+                            Duration = extra.Duration
+                        };
+                    }
+                    
+                    if (Math.Abs(extra.Delay) > 0.01f || extra.Intervals != 0)
+                    {
+                        current = new AttackDelayBehavior
+                        {
+                            Action = current,
+                            Delay = extra.Delay,
+                            Intervals = extra.Intervals,
+                            IgnoreInterrupts = extra.IgnoreInterrupts
+                        };
+                    }
+
+                    behaviors.Add(current);
+                }
+                
+                if (behaviors.Count == default) continue;
+
+                if (behaviors.Count > 1)
                 {
                     var and = new AndBehavior
                     {
@@ -191,7 +224,7 @@ namespace Tree
                 }
             }
         }
-
+        
         public void UpdateIcon(Sprite sprite)
         {
             Icon = sprite;
